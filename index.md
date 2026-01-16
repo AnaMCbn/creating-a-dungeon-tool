@@ -366,14 +366,12 @@ dungeon.rooms[dungeon.grid->cells[i].roomId]
  ```
 
 <figure style="text-align: center;">
-  <img src="assets/output1.png" width="640" height="360" alt="Output example 1" style="display: inline-block; margin: 10px;">
-  <img src="assets/output2.png" width="640" height="360" alt="Output example 2" style="display: inline-block; margin: 10px;">
+  <img src="assets/output1.png" width="400" height="225" alt="Output example 1" style="display: inline-block; margin: 10px;">
+  <img src="assets/output2.png" width="400" height="225" alt="Output example 2" style="display: inline-block; margin: 10px;">
+  <br>
+  <img src="assets/output3.png" width="400" height="225" alt="Output example 3" style="display: inline-block; margin: 10px;">
+  <img src="assets/output4.png" width="400" height="225" alt="Output example 4" style="display: inline-block; margin: 10px;"> 
   <figcaption>Some possible outputs shown in the editor</figcaption>
-</figure>
-
-<figure style="text-align: center;">
-  <img src="assets/output3.png" width="640" height="360" alt="Output example 1" style="display: inline-block; margin: 10px;">
-  <img src="assets/output4.png" width="640" height="360" alt="Output example 2" style="display: inline-block; margin: 10px;">
 </figure>
 
 
