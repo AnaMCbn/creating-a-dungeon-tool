@@ -31,19 +31,19 @@ By Ciobanu Ana Maria
   <figcaption>Demo of the dungeon generation tool in action</figcaption>
 </figure>
 
-We are all familiar with the classic rogue-like, procedurally generated dungeons and their timelessness in games. There are, of course, countless methods you can use to generate such levels, all having different complexities and final aspects that can be tailored for specific outputs. But what would a more general approach be ? This article will go over the process of developing a tool for procedural dungeon generation: how to create a framework that allows for quick testing and concepting with enough control of the overall level. 
+We are all familiar with the classic rogue-like, procedurally generated dungeons and their timelessness in games. There are, of course, countless methods you can use to generate such levels, all having different complexities and final aspects that can be tailored for specific outputs. But what would a more general approach be? This article will go over the process of developing a tool for procedural dungeon generation: how to create a framework that allows for quick testing and concepting with enough control of the overall level. 
 
 ## Preamble
 
-Researching various algorithms for dungeon generation, I stumbled upon [this article by BorisTheBrave](https://www.boristhebrave.com/2019/07/28/dungeon-generation-in-enter-the-gungeon/) which goes over the method the developers of Enter the Gungeon used for the level generation. In order to preserve a certain flow or "feel" of the levels across multiple runs, the dungeons are formed based on flowcharts. Pre-made rooms are placed randomly, respecting this graph and following a relatively straightforward algorithm, where the flowchart is split into multiple compounds of rooms, first fitting the rooms in a compound together, and then the resulting structures with one another. 
-I found a graph to be a great base for generating a dungeon, as it can be a useful data structure for keeping track of the players progression through the level, but, most importantly, it provides control over how the level feels and it can give more of a "handcrafted" look. Starting from this, I decided to try and develop a tool that focuses on providing the logic necessary for easily generating a level based on a graph, as well as sufficient control over its aspect. 
+Researching various algorithms for dungeon generation, I stumbled upon [this article by BorisTheBrave](https://www.boristhebrave.com/2019/07/28/dungeon-generation-in-enter-the-gungeon/), which goes over the method the developers of Enter the Gungeon used for the level generation. To preserve a certain flow or "feel" of the levels across multiple runs, the dungeons are formed based on flowcharts. Pre-made rooms are placed randomly, respecting this graph and following a relatively straightforward algorithm, where the flowchart is split into multiple compounds of rooms, first fitting the rooms in a compound together, and then the resulting structures with one another. 
+I found a graph to be a great base for generating a dungeon, as it can be a useful data structure for keeping track of the player's progression through the level, but, most importantly, it provides control over how the level feels, and it can give more of a "handcrafted" look. Starting from this, I decided to try and develop a tool that focuses on providing the logic necessary for easily generating a level based on a graph, as well as sufficient control over its aspect. 
 
 
 ## Tool structure
 
-One of the most important things to take into account when developing a tool is its structure: what are the elements you will need, how will they interact with each other, what should be available to the user and so on. 
+One of the most important things to take into account when developing a tool is its structure: what are the elements you will need, how will they interact with each other, what should be available to the user, and so on. 
 
-So what do we need in our case ?
+So what do we need in our case?
 First of all, it's important to make the separation between the actual logic for generating the dungeons, the algorithms themselves, and the functionality that will make our program into a tool that others can use with ease. Based on this, the project should be split into two parts: a library responsible only for generating the levels and an editor, a separate project that offers a debug output and a user interface that allows for easy interaction with the tool.
 
 This is an overview of my project structure:
@@ -65,15 +65,15 @@ Let's also talk about how the library is structured, as it is necessary to provi
 
 The structures we will be working with are the following: 
 
-Dungeon : the main object the user can work with
+Dungeon: the main object the user can work with
 
  -  Contains:
      - a vector of rooms;
     - a vector of paths; (a structure that simply contains the ids of the two rooms it connects)
     - a pointer to a grid;
-    - a vector of room rules templates; ( a structure that stores information about room aspect rules such as size or how isolated it is.)
+    - a vector of room rules templates; ( a structure that stores information about room aspect rules, such as size or how isolated it is.)
 
-Room : structure providing information about the rooms
+Room: a structure providing information about the rooms
 
  -  Contains:
     - center position
@@ -81,13 +81,13 @@ Room : structure providing information about the rooms
 	- bounding box; (another structure that stores information about the size and shape of the room, this one referring to the current aspect)
 	- a room rules template id which corresponds to the position in the room rules vector in the dungeon structure. 
 
-Grid : a structure made of cells which contain useful information such as the room id or path id of the object currently occupying the cell.
+Grid: a structure made of cells that contain useful information, such as the room id or path id of the object currently occupying the cell.
 
-DungeonTool : a class that contains all the functions that can be used for dungeon generation, most important being GenerateDungeon(dungeon) a function we can call on our dungeon object to make it store a valid procedurally generated level.
+DungeonTool: a class that contains all the functions that can be used for dungeon generation, most important being GenerateDungeon(dungeon), a function we can call on our dungeon object to make it store a valid procedurally generated level.
 
 ## Dungeon generation using a graph as a starting point
 
-Now let's go over the most important functions in the dungeon_tool library
+Now, let's go over the most important functions in the dungeon_tool library.
 
 ### Generating the dungeons
 
@@ -100,7 +100,7 @@ while (tryAgain) {
 	GenerateBoundingBoxes(dungeon); //assign random sizes to the rooms
 	PlaceRooms(dungeon); //place the rooms randomly without any overlaps or road intersections
 	PullRoomsTowardsPoint(dungeon, glm::ivec2(0, 0)); //pull everything towards the middle of the grid
-	// !! after this step make sure to mark the grid cells with the corresponding room id
+	// !! After this step, make sure to mark the grid cells with the corresponding room id
 	bool valid = false, found = false;
 	int tries = 0; //limit the tries with each layout
 	while (!valid && tries < 3) {
@@ -133,27 +133,27 @@ while (tryAgain) {
 
 ### Placing the rooms
 
-I initially tried to adapt the Enter the Gungeon algorithm for my purposes, but I realized it may be quite difficult to determine what is a good compound to chose when there are an unpredictable amount of loops and connections between rooms, so I decided to try out a simple algorithm that tries to spawn in rooms in such a way that there are no collisions and no road intersections. The rooms were generated to be rectangles of random sizes. This is an outline of the algorithm I used: 
+I initially tried to adapt the Enter the Gungeon algorithm for my purposes. However, I realized it may be quite difficult to determine what is a good compound to choose when there is an unpredictable number of loops and connections between rooms, so I decided to try out a simple algorithm that tries to spawn in rooms in such a way that there are no collisions and no road intersections. The rooms were generated to be rectangles of random sizes. This is an outline of the algorithm I used: 
 
 ```
 -loop over every room and try to place in a random position in a circle of radius R
 --if the room overlaps with another room that has already been placed, spawn it in a
-different position, increase the spawning radius and try again
+different position, increase the spawning radius, and try again
 
 -loop over all the rooms adjacent to the current one and over all the paths 
 (that are not connected to the current room or adjacent room )
---if the road between the current room and it's adjacent is intersecting any other road
-increase the spawning radius and try again.
+--if the road between the current room and its adjacent is intersecting any other road
+Increase the spawning radius and try again.
 --if the spawning radius reached the maximum spawning radius set or the loop count gets too large,
-retry the room placing from a different position. 
+retry the room placement from a different position. 
 ```
-This is not an ideal algorithm, but it performed fine for small scale dungeons.
+This is not an ideal algorithm, but it performed well for small-scale dungeons.
 
-In order to improve the performance, as well as avoid infinite searches that are easily created when increasing the road count while using a brute force algorithm, I opted to use OGDF: an open source library for graph drawing. It has a lot of different algorithms for planar graph embedding, which, if you've never heard of it, it is exactly what we were doing in the previous algorithm, but with a mathematical approach instead of brute force. A planar graph is a graph that can be translated to a plane without any edges intersecting and embedding a graph refers to actually drawing out the graph. There are multiple algorithm that can be used for this and OGDF covers all of the well known ones. The downside to this library is its size, which is quite large and requires building. However, it is a trade off for more performance, scalability and flexibility regarding the algorithm used if that is desired.
+In order to improve the performance, as well as avoid infinite searches that are easily created when increasing the road count while using a brute force algorithm, I opted to use OGDF: an open source library for graph drawing. It has a lot of different algorithms for planar graph embedding, which, if you've never heard of it, it is exactly what we were doing in the previous algorithm, but with a mathematical approach instead of brute force. A planar graph is a graph that can be translated to a plane without any edges intersecting. Embedding a graph refers to actually drawing out the graph. Multiple algorithms can be used for this and OGDF covers all of the well known ones. The downside to this library is its size, which is quite large and requires building. However, it is a trade-off for more performance, scalability, and flexibility regarding the algorithm used if that is desired.
 
-I chose to use the SpringEmbedderFRExact algorithm as a base, as it offers some minimal randomization, customization and is relatively fast, but the algorithms the library provides are plentiful. Similar to the other energy based algorithms it provides somewhat randomized results that we will then process to achieve a more "organic" look.
+I chose to use the SpringEmbedderFRExact algorithm as a base, as it offers some minimal randomization, customization, and is relatively fast, but the algorithms the library provides are plentiful. Similar to the other energy-based algorithms, it provides somewhat randomized results that we will then process to achieve a more "organic" look.
 
-First initialize the graph nodes and edges:
+First, initialize the graph nodes and edges:
 ```cpp
 ogdf::Graph G;
 std::vector<ogdf::node> v;
@@ -220,9 +220,9 @@ for (const ogdf::node node: G.nodes) {
 
 After the rooms are laid out quite far apart and at random positions, we can pull them towards the middle of the grid using something like this: 
 
-Start by looping over all the rooms. I sorted the rooms based on their distance to the point they are pulled towards, but it is not necessary. If you choose to do this, store the sorted indices, don't change the actual order in the rooms vectors.
+Start by looping over all the rooms. I sorted the rooms based on their distance to the point they are pulled towards, but it is not necessary. If you choose to do this, store the sorted indices; don't change the actual order in the rooms vectors.
 
-For each loop do the following:
+For each loop, do the following:
 ```cpp
 int i = sortedIndices[idx];
 somethingChanged = true;
@@ -256,13 +256,13 @@ int iterations = 0; //have a limited amount of iterations
 		}//if the room is not in the middle and no collision has been found, keep going
 
 // you can also add another check for distance from the middle, as some collisions
-// may be encountered to early on. This way you can force a more compact dungeon
+// may be encountered too early on. This way, you can force a more compact dungeon
 }
 ```
 ### Creating the roads
 The road generation algorithm is an A* search with custom heuristics, which prioritizes a strictly horizontal move when possible. This is done by reducing the heuristics by an arbitrary number so that a move in the same direction is preferred when possible.
 
-We will need a priority queue for the grid cells that still need to be visited, a vector that keeps track of the cells already visited (we choose this over a hash table as the grid can get quite big and we would store an unnecessary amount of data as we would likely not visit that many cells in our search )
+We will need a priority queue for the grid cells that still need to be visited, a vector of bool containing all the grid cells to keep track of the already visited ones (we choose this over a vector of the already visited cells, even if the grid can get quite big, as the search is significantly faster)
 
 ``` cpp
 std::map<std::pair<int, int>, std::pair<int, int> > parent;
@@ -282,7 +282,7 @@ while (!pq.empty() && iterations < maxIterations) {
 
 	if (current.row == pointB.row && current.col == pointB.col) { 
         ...
-	// if the destination is found trace the road back through the parents
+	// if the destination is found, trace the road back through the parents
         //don't forget to mark the cells
 	}
 
@@ -306,7 +306,7 @@ while (!pq.empty() && iterations < maxIterations) {
     // add it to the map, compute the heuristics based on the distance improvement
     // and, if the destination row or column hasn't been reached, decrease the
     // heuristics by an arbitrary number. This is to prevent zig-zag roads and 
-    // prefer a cell that continues a straight line. Four just looked best
+    // prefer a cell that continues a straight line. Four just looked best.
 
     ... //(repeat the same logic for the down/left and right cells)		
 }
@@ -323,10 +323,10 @@ return {}; // No path found
   <figcaption>Adding a room template</figcaption>
 </figure>
 
-For the dungeon_editor we can create a separate project that will use our newly created dungeon_tool library. This project will serve as a user interface for creating the base graph, setting rules for the dungeon and visualizing the output. For this part I chose to use SDL2, ImGui and ImGuizmo for displaying the graph. 
-The room templates provide some basic variation to the room size, its aspect ratio and how isolated it is from other rooms. These rules can be greatly expanded, but the structure provided should serve as a solid skeleton. 
-The graph editor expands and changes the ImGuizmo GraphEditor, adding functionality like deleting nodes and links, as well as making them be unidirectional to better serve the purpose of the tool. 
-The grid editor just renders the grid according to the information stored in dungeon->grid
+For the dungeon_editor, we can create a separate project that will use our newly created dungeon_tool library. This project will serve as a user interface for creating the base graph, setting rules for the dungeon and visualizing the output. For this part, I chose to use SDL2, ImGui and ImGuizmo for displaying the graph. 
+The room templates provide some basic variation to the room size, its aspect ratio, and how isolated it is from other rooms. These rules can be greatly expanded, but the structure provided should serve as a solid skeleton. 
+The graph editor expands and changes the ImGuizmo GraphEditor, adding functionality like deleting nodes and links, as well as making them unidirectional to better serve the purpose of the tool. 
+The grid editor just renders the grid according to the information stored in dungeon->grid.
 
 ## Using the library 
 
@@ -341,7 +341,7 @@ The editor should save and load:
 - the graph node positions
 - the room template color settings
 
-After linking the library to a project it can be used as such:
+After linking the library to a project, it can be used as such:
 ```cpp
 #include"DungeonTool.h"
 
@@ -355,7 +355,7 @@ dungeon_tool::DungeonTool::SetSeed(seed);
 dungeon_tool::DungeonTool::GenerateDungeons(dungeon);
 // call this on the dungeon structure to place the rooms and roads
 dungeon_tool::DungeonTool::MergeRoads(*dungeon.grid);
-// here I created some extra functionality for merging roads that are close by
+//Here I created some extra functionality for merging roads that are close by
 // any other functionality you would like to add should be in DungeonTool and 
 // edit the dungeon structure provided
 dungeon.grid->cells[i].roomId
@@ -377,11 +377,11 @@ dungeon.rooms[dungeon.grid->cells[i].roomId]
 
 ## Limitations
 
- The current bottleneck is the road generation algorithm. Even if the SpringEmbedder algorithm returns a layout where roads are guaranteed to not intersect, this may not remain true after pulling the rooms together, taking longer to find a valid layout. Finding a path through the grid also take a bit of time, especially when the paths aren't as straightforward anymore. Considering this, the tool can load around 11 rooms with 12 connections on a 150 by 150 cell grid every frame at ~40 ms (for comparison using the brute force approach takes around 500 ms for 10 rooms with 10 connections). From then on the loading time starts increasing, especially when adding connections or loops between rooms.
+ The current bottleneck is the road generation algorithm. Even if the SpringEmbedder algorithm returns a layout where roads are guaranteed not intersect, this may not remain true after pulling the rooms together, taking longer to find a valid layout. Finding a path through the grid also takes a bit of time, especially when the paths aren't as straightforward anymore. Considering this, the tool can load around 11 rooms with 12 connections on a 150 by 150 cell grid every frame at ~40 ms (for comparison, using the brute force approach takes around 500 ms for 10 rooms with 10 connections). From then on the loading time starts increasing, especially when adding connections or loops between rooms.
 
 ## Conclusion 
 
- In the end, this project offered me a lot of insight when it comes to designing a tool, as well as some of the algorithms behind procedurally generated dungeons and I hope to have shared some of that. Working on this project as part of my university studies and having a limited time frame didn't allow for too much work in regards to pushing the limits of the flexibility and control such a tool can offer, however I tried to provide a solid skeleton that can be easily expanded upon in the future. 
+ In the end, this project offered me a lot of insight when it comes to designing a tool, as well as some of the algorithms behind procedurally generated dungeons, and I hope to have shared some of that. Working on this project as part of my university studies and having a limited time frame didn't allow for too much work in regard to pushing the limits of the flexibility and control such a tool can offer. I tried to provide a solid skeleton that can be easily expanded upon in the future. 
 
 ### Future work
 
