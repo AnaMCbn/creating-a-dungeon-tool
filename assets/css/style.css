@@ -1,35 +1,30 @@
 ---
 ---
 
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap");
+@import "{{ site.theme }}";
 
-/* Keep your existing normalize.css and base styles */
-/* ... (all your normalize.css code stays the same) ... */
-
+/* Dark theme matching Claude interface */
 body {
-  background-color: #ece8cd;
-  padding: 0;
-  margin: 0;
+  background-color: #212121;
+  color: #e8e6e3;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #201b1b;
+  margin: 0;
+  padding: 0;
 }
 
+/* Hide the auto-generated project name */
 .page-header {
-  color: #000;
-  text-align: center;
-  background-color: #506750;
-  background-image: linear-gradient(120deg, #506750, #506750);
+  display: none;
 }
 
-/* FIXED: Better centering for main content */
+/* Main content container */
 .main-content {
-  word-wrap: break-word;
-  max-width: 900px;  /* Increased from 64rem for better readability */
-  margin: 0 auto;    /* Center the content */
+  max-width: 900px;
+  margin: 0 auto;
   padding: 3rem 4rem;
-  font-size: 1.1rem;
+  background-color: #212121;
 }
 
 @media screen and (max-width: 64em) {
@@ -41,29 +36,8 @@ body {
 @media screen and (max-width: 42em) {
   .main-content {
     padding: 2rem 1.5rem;
-    font-size: 1rem;
+    font-size: 15px;
   }
-}
-
-/* Center images and videos */
-.main-content img,
-.main-content video {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%;
-}
-
-/* Center figures */
-.main-content figure {
-  text-align: center;
-  margin: 2rem auto;
-}
-
-.main-content figcaption {
-  margin-top: 0.5rem;
-  font-style: italic;
-  color: #555;
 }
 
 /* Headings */
@@ -73,84 +47,155 @@ body {
 .main-content h4,
 .main-content h5,
 .main-content h6 {
+  color: #e8e6e3;
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-weight: normal;
-  color: #000;
+  font-weight: 600;
 }
 
-/* Code blocks */
-.main-content code {
-  padding: 2px 4px;
-  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 0.9rem;
-  color: #567482;
-  background-color: #f3f6fa;
-  border-radius: 0.3rem;
+.main-content h1 {
+  font-size: 2.2em;
+  border-bottom: 2px solid #3d3d3d;
+  padding-bottom: 0.3em;
 }
 
-.main-content pre {
-  padding: 0.8rem;
-  margin: 1.5rem 0;
-  font: 1rem Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  color: #567482;
-  word-wrap: normal;
-  background-color: #f3f6fa;
-  border: solid 1px #dce6f0;
-  border-radius: 0.3rem;
-  overflow-x: auto;
+.main-content h2 {
+  font-size: 1.8em;
+  border-bottom: 1px solid #3d3d3d;
+  padding-bottom: 0.3em;
 }
 
-.main-content pre > code {
-  padding: 0;
-  margin: 0;
-  font-size: 0.9rem;
-  color: #567482;
-  word-break: normal;
-  white-space: pre;
-  background: transparent;
-  border: 0;
+.main-content h3 {
+  font-size: 1.4em;
+}
+
+/* Paragraphs */
+.main-content p {
+  margin-bottom: 1em;
 }
 
 /* Links */
 a {
-  color: #1e6bb8;
+  color: #6fa8dc;
   text-decoration: none;
 }
 
 a:hover {
+  color: #8ab4f8;
   text-decoration: underline;
+}
+
+/* Code blocks */
+.main-content code {
+  background-color: #2d2d2d;
+  color: #e8e6e3;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.9em;
+}
+
+.main-content pre {
+  background-color: #2d2d2d;
+  border: 1px solid #3d3d3d;
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.main-content pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
 }
 
 /* Blockquotes */
 .main-content blockquote {
-  padding: 0 1rem;
+  border-left: 4px solid #6fa8dc;
+  padding-left: 1rem;
   margin-left: 0;
-  color: #819198;
-  border-left: 0.3rem solid #dce6f0;
+  color: #b8b8b8;
+  font-style: italic;
+}
+
+/* Images and videos */
+.main-content img,
+.main-content video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Figures */
+.main-content figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.main-content figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+  color: #b8b8b8;
+  font-style: italic;
+}
+
+/* Lists */
+.main-content ul,
+.main-content ol {
+  padding-left: 2rem;
+  margin-bottom: 1em;
+}
+
+.main-content li {
+  margin-bottom: 0.5em;
+}
+
+/* Table of contents */
+.main-content nav {
+  background-color: #2d2d2d;
+  border: 1px solid #3d3d3d;
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.main-content nav ol {
+  margin-bottom: 0;
 }
 
 /* Tables */
 .main-content table {
-  display: block;
   width: 100%;
-  margin: 2rem auto;
-  overflow: auto;
-  word-break: normal;
-  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  background-color: #2d2d2d;
 }
 
 .main-content table th,
 .main-content table td {
-  padding: 0.5rem 1rem;
-  border: 1px solid #e9ebec;
+  padding: 0.75rem;
+  border: 1px solid #3d3d3d;
 }
 
-/* Table of contents styling */
-.main-content nav ol {
-  padding-left: 1.5rem;
+.main-content table th {
+  background-color: #1a1a1a;
+  font-weight: 600;
 }
 
-.main-content nav ol li {
-  margin-bottom: 0.5rem;
+/* Horizontal rule */
+.main-content hr {
+  border: none;
+  border-top: 1px solid #3d3d3d;
+  margin: 2rem 0;
+}
+
+/* Inline elements */
+.main-content strong {
+  color: #e8e6e3;
+  font-weight: 600;
+}
+
+.main-content em {
+  color: #d0d0d0;
 }

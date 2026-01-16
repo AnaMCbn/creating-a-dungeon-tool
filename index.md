@@ -4,7 +4,9 @@ title: ""
 # Creating a tool for procedurally generating dungeons from a graph
 
 **January 16, 2026 · 10 min read** 
+
 By Ciobanu Ana Maria
+
 ---
 
 ## Table of Contents
@@ -24,12 +26,10 @@ By Ciobanu Ana Maria
 
 ---
 
- <div style="text-align: center;">
-  <video width="426" height="240" controls>
-    <source src="assets/tool.gif" type="video/mp4">
-  </video>
+<figure style="text-align: center;">
+  <img src="assets/tool.gif" width="640" height="360" alt="Dungeon generation tool demo">
   <figcaption>Demo of the dungeon generation tool in action</figcaption>
-</div>
+</figure>
 
 We are all familiar with the classic rogue-like, procedurally generated dungeons and their timelessness in games. There are, of course, countless methods you can use to generate such levels, all having different complexities and final aspects that can be tailored for specific outputs. But what would a more general approach be ? This article will go over the process of developing a tool for procedural dungeon generation: how to create a framework that allows for quick testing and concepting with enough control of the overall level. 
 
@@ -209,12 +209,12 @@ for (const ogdf::node node: G.nodes) {
   randGen.GetRandomFloatInRange(-currentRoomRule.maxSize * 3, currentRoomRule.maxSize * 3));
 }
 ```
-<div style="text-align: center;">
-  <video width="426" height="240" controls>
+<figure style="text-align: center;">
+  <video width="640" height="360" controls>
     <source src="assets/nopulling.mp4" type="video/mp4">
   </video>
-  <figcaption>This is how the output should like now, with road generation but no further room processing</figcaption>
-</div>
+  <figcaption>This is how the output should look now, with road generation but no further room processing</figcaption>
+</figure>
 
 ### Pulling the rooms together  
 
@@ -316,12 +316,12 @@ return {}; // No path found
 
 ## Dungeon editor functionality
 
-<div style="text-align: center;">
-  <video width="426" height="240" controls>
+<figure style="text-align: center;">
+  <video width="640" height="360" controls>
     <source src="assets/adding_template.mp4" type="video/mp4">
   </video>
   <figcaption>Adding a room template</figcaption>
-</div>
+</figure>
 
 For the dungeon_editor we can create a separate project that will use our newly created dungeon_tool library. This project will serve as a user interface for creating the base graph, setting rules for the dungeon and visualizing the output. For this part I chose to use SDL2, ImGui and ImGuizmo for displaying the graph. 
 The room templates provide some basic variation to the room size, its aspect ratio and how isolated it is from other rooms. These rules can be greatly expanded, but the structure provided should serve as a solid skeleton. 
@@ -365,21 +365,15 @@ dungeon.rooms[dungeon.grid->cells[i].roomId]
 // or room/path data like this
  ```
 
- <figure style="text-align: center;">
-
-  <div style="text-align: center;">
-  <img src="assets/output1.png" width="400" alt="Description 1" style="display: inline-block; margin: 10px;">
-  <img src="assets/output2.png" width="400" alt="Description 2" style="display: inline-block; margin: 10px;">
-</div>
+<figure style="text-align: center;">
+  <img src="assets/output1.png" width="640" height="360" alt="Output example 1" style="display: inline-block; margin: 10px;">
+  <img src="assets/output2.png" width="640" height="360" alt="Output example 2" style="display: inline-block; margin: 10px;">
+  <figcaption>Some possible outputs shown in the editor</figcaption>
 </figure>
 
 <figure style="text-align: center;">
-
-  <div style="text-align: center;">
-  <img src="assets/output1.png" width="400" alt="Description 1" style="display: inline-block; margin: 10px;">
-  <img src="assets/output2.png" width="400" alt="Description 2" style="display: inline-block; margin: 10px;">
-</div>
-  <figcaption>Some possible outputs shown in the editor </figcaption>
+  <img src="assets/output3.png" width="640" height="360" alt="Output example 1" style="display: inline-block; margin: 10px;">
+  <img src="assets/output4.png" width="640" height="360" alt="Output example 2" style="display: inline-block; margin: 10px;">
 </figure>
 
 
